@@ -8,10 +8,11 @@ use Maatwebsite\Excel\Concerns\RegistersEventListeners;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 
-class TodosExport implements FromQuery, WithHeadings, WithMapping, WithEvents
+class TodosExport implements FromQuery, WithHeadings, WithMapping, WithEvents, WithStrictNullComparison
 {
     use RegistersEventListeners;
 

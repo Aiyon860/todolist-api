@@ -1,58 +1,163 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Todo List API
 
-## About Laravel
+A Laravel 13-based RESTful API for managing todo items. This project is part of a **home test** for an Backend Developer internship position at PT Dynamic Talenta Navigator.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Table of Contents
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Setup & Installation](#setup--installation)
+- [API Usage](#api-usage)
+- [Notes](#notes)
+- [Credentials](#credentials)
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Features
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Todo CRUD** (`index` & `store` implemented)
+- **Filtering & Search**: filter by title, assignee, status, priority, due date, and time tracked
+- **Pagination**: returns 10 items per page
+- **Excel Export**: download todos as `.xlsx` with summary (total items + total time)
+- **Consistent JSON Response**: format: `{ success, message, data }`
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+---
 
-## Agentic Development
+## Tech Stack
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+| Layer | Technology |
+|-------|-----------|
+| Framework | Laravel 13.8+ |
+| PHP | 8.3+ |
+| Database | SQLite |
+| Excel Export | maatwebsite/laravel-excel |
+
+---
+
+## Setup & Installation
+
+### Prerequisites
+
+- PHP 8.3+
+- Composer
+
+### Quick Start
 
 ```bash
-composer require laravel/boost --dev
+git clone <repo-url> todo-list
+cd todo-list
 
-php artisan boost:install
+# Install dependencies, setup .env, generate key, and migrate
+composer setup
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Or manually:
 
-## Contributing
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Run Server
 
-## Code of Conduct
+```bash
+composer dev
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Or:
 
-## Security Vulnerabilities
+```bash
+php artisan serve
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Server will run at `http://localhost:8000`.
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## API Usage
+
+### Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/todos` | List todos (with filters & pagination) |
+| `POST` | `/api/todos` | Create a new todo |
+| `GET` | `/api/todos?format=excel` | Download todos as Excel file |
+
+### Filters (GET /api/todos)
+
+| Parameter | Example | Description |
+|-----------|---------|-------------|
+| `title` | `?title=learn` | Search by title (LIKE) |
+| `assignee` | `?assignee=john,jane` | Filter by assignee (comma = OR) |
+| `status` | `?status=open,in_progress` | Filter by status (comma = OR) |
+| `priority` | `?priority=high,medium` | Filter by priority (comma = OR) |
+| `start` / `end` | `?start=2025-01-01&end=2025-12-31` | Due date range |
+| `min` / `max` | `?min=30&max=120` | Time tracked range (minutes) |
+
+### Example Requests
+
+**Create a new todo:**
+
+```bash
+curl -X POST http://localhost:8000/api/todos \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Learn Laravel",
+    "assignee": "John",
+    "due_date": "2025-08-01",
+    "priority": "high",
+    "status": "pending"
+  }'
+```
+
+**Download Excel:**
+
+```bash
+curl -o todos.xlsx "http://localhost:8000/api/todos?format=excel"
+```
+
+**List todos (filter by status + priority) with Excel Format:**
+
+```bash
+curl "http://localhost:8000/api/todos?format=excel&status=open,in_progress&priority=high"
+```
+
+**List todos (filter by status + priority) with JSON format:**
+
+```bash
+curl "http://localhost:8000/api/todos?status=open,in_progress&priority=high"
+```
+
+### Enum Values
+
+**Status:** `pending`, `open`, `in_progress`, `completed`
+
+**Priority:** `low`, `medium`, `high`
+
+---
+
+## Notes
+
+This project was completed as part of a home test for an internship. Key evaluation areas:
+
+1. **Laravel understanding**: routing structure, controllers, models, migrations, and request handling
+2. **Code quality**: form request validation, API resources, enums, and consistent JSON response format
+3. **Problem solving**: flexible filtering implementation
+4. **Documentation**: this README itself
+
+---
+
+## Credentials
+
+- **Name:** Daniel Adi Pratama
+- **Email:** danieladipratama860@gmail.com
+- **Phone:** +6282228678208
+- **Campus:** Politeknik Negeri Semarang
+- **Study Program:** D4 - Teknologi Rekayasa Komputer
+- **Portfolio:** https://danielaiyon.net
