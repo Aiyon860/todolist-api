@@ -2,10 +2,13 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\TodoPriority;
+use App\Enums\TodoStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class GetTodoRequest extends FormRequest
 {
@@ -25,7 +28,39 @@ class GetTodoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => [
+                'sometimes',
+                Rule::string()->min(1)->max(255)
+            ],
+            'assignee' => [
+                'sometimes',
+                Rule::string()->min(1)->max(255)
+            ],
+            'start' => [
+                'sometimes',
+                'date'
+            ],
+            'end' => [
+                'sometimes',
+                'date',
+                'after_or_equal:start'
+            ],
+            'min' => [
+                'sometimes',
+                Rule::numeric()->min(0)
+            ],
+            'max' => [
+                'sometimes',
+                Rule::numeric()->min(0)
+            ],
+            'status' => [
+                'sometimes',
+                Rule::enum(TodoStatus::class)
+            ],
+            'priority' => [
+                'sometimes',
+                Rule::enum(TodoPriority::class)
+            ]
         ];
     }
 
