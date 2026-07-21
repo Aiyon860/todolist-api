@@ -53,21 +53,21 @@ class TodosExport implements FromQuery, WithHeadings, WithMapping, WithEvents
         $summaryRow = $lastRow + 2;
 
         // Styling heading (bold + border)
-        $sheet->getStyle('A1:F1')->getFont()->setBold(true);
-        $sheet->getStyle('A1:F' . $lastRow)->getBorders()
+        $sheet->getStyle('A1:G1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:G' . $lastRow)->getBorders()
             ->getAllBorders()
             ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
         // Summary
         $sheet->setCellValue("A{$summaryRow}", 'Total Todos');
         $sheet->setCellValue("B{$summaryRow}", $totalTodos);
-        $sheet->setCellValue("A({$summaryRow + 1})", 'Total Time Tracked');
-        $sheet->setCellValue("B({$summaryRow + 1})", $totalTimeTracked);
+        $sheet->setCellValue('A' . ($summaryRow + 1), 'Total Time Tracked');
+        $sheet->setCellValue('B' . ($summaryRow + 1), $totalTimeTracked);
 
         // Styling summary (bold + border)
-        $sheet->getStyle("A{$summaryRow}:B({$summaryRow + 1})")
+        $sheet->getStyle("A{$summaryRow}:B" . ($summaryRow + 1))
             ->getFont()->setBold(true);
-        $sheet->getStyle("A{$summaryRow}:B({$summaryRow + 1})")
+        $sheet->getStyle("A{$summaryRow}:B" . ($summaryRow + 1))
             ->getBorders()->getAllBorders()
             ->setBorderStyle(Border::BORDER_THIN);
 

@@ -50,7 +50,7 @@ class TodoController extends Controller
                 ->additional([
                     'success' => true,
                     'message' => 'Todos retrived.'
-                ])
+            ]);
         } catch (Throwable $e) {
             Log::error('Failed to fetch todos.', [
                 'error' => $e->getMessage()

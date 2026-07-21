@@ -55,11 +55,11 @@ class GetTodoRequest extends FormRequest
             ],
             'status' => [
                 'sometimes',
-                Rule::enum(TodoStatus::class)
+                'string'
             ],
             'priority' => [
                 'sometimes',
-                Rule::enum(TodoPriority::class)
+                'string'
             ]
         ];
     }
