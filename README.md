@@ -142,6 +142,10 @@ curl "http://localhost:8000/api/todos?status=open,in_progress&priority=high"
 
 ---
 
+## Postman Collection
+
+Check out the [Postman Collection](https://danielaiyons-team.postman.co/workspace/My-Workspace~86126535-67f1-4df8-8ce1-ae85dfe167d6/collection/32072198-5bbb6813-5061-4907-b094-ca461450cfe8?action=share&source=copy-link&creator=32072198) for more info about the API Documentation.
+
 ## Notes
 
 This project was completed as part of a home test for an internship. Key evaluation areas:
